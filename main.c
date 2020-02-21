@@ -10,24 +10,39 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mlx.h>
+#include "fdf.h"
 
-int f(int key, void *param)
+int deal_key(int key, void *data)
 {
-	//mlx_destroy_window(mlx_ptr, win);
+	ft_putnbr(key);
 	return (0);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
-	void *mlx_ptr;
-	void *win;
+	t_fdf	*fdf;
+	int	i;
 
-	mlx_ptr = mlx_init();
-	win = mlx_new_window(mlx_ptr, 1000, 500, "FDF");
-	mlx_string_put(mlx_ptr, win, 500, 250, 0xFFFFFF, "HELLO WORLD!");
-	mlx_key_hook(win, f, (void*)0);
-	mlx_loop(mlx_ptr);
+	i = 1;
+	fdf =(t_fdf*)malloc(sizeof(t_fdf));
+	fdf->width = 0;
+	fdf->height = 0;
+	fdf->zoom = 1;
+	if (argc == 2)
+		if (ft_read_map(fdf, argv[1]) < 0)
+		{
+			free(fdf);
+			ft_putstr("error!\n");
+			return (0);
+		}
+	fdf->mlx_ptr = mlx_init();
+	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, 1000, 1000, "FDF");
+	//bresenham(fdf, 1, 1, 1, 2);
+	//bresenham(fdf, 1, 1, 2, 1);
+	draw(fdf);
+	mlx_key_hook(fdf->win_ptr, deal_key, NULL);
+	mlx_loop(fdf->mlx_ptr);
+	free(fdf);
 	return (0);
 }
 
