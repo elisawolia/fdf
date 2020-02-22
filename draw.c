@@ -28,8 +28,17 @@ void bresenham(t_fdf *fdf, float x, float y, float x1, float y1)
 	float z;
 	float z1;
 
-	z = fdf->map[(int)y][(int)x];
-	z1 = fdf->map[(int)y1][(int)x1];
+	z = fdf->map[(int)y][(int)x].data;
+	z1 = fdf->map[(int)y1][(int)x1].data;
+	
+	if (fdf->map[(int)y][(int)x].data <= -5)
+			fdf->color = fdf->scheme.low;
+	else if (fdf->map[(int)y][(int)x].data <= 0)
+			fdf->color = fdf->scheme.fine;
+	else if (fdf->map[(int)y][(int)x].data <= 5)
+			fdf->color = fdf->scheme.norm;
+	else if (fdf->map[(int)y][(int)x].data > 5)
+			fdf->color = fdf->scheme.high;
 
 	x *= fdf->zoom;
 	y *= fdf->zoom;
@@ -60,7 +69,7 @@ void bresenham(t_fdf *fdf, float x, float y, float x1, float y1)
 
 	while ((int)(x - x1)||(int)(y - y1))
 	{
-		mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, x, y, (z) ? fdf->color_non : fdf->color);
+		mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, x, y, fdf->color);
 		x += x_step;
 		y += y_step;
 		if (x > 1000 || y > 1000 || y < 0 || x < 0)

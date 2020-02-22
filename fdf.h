@@ -19,19 +19,47 @@
 #include "LIB/libft.h"
 #include "get_next_line/get_next_line.h"
 
+#define LOW_1 0xffc300
+#define	FINE_1	0xff5733
+#define	NOR_1	0xc70039
+#define HIGH_1	0x900c3f
+
+#define LOW_2 0xabedc6
+#define	FINE_2	0x98d9c2
+#define	NOR_2	0xf19a3e
+#define HIGH_2	0x403233
+
+#define LOW_3 0x9ad4d6
+#define	FINE_3	0xf2fdff
+#define	NOR_3	0xdbcbd8
+#define HIGH_3	0x564787	
+
+typedef struct s_col
+{
+	int		low;
+	int		fine;
+	int		norm;
+	int		high;
+}	t_col;
+
+typedef	struct s_point
+{
+	int		data;
+	int		color;
+}			t_point;
 
 typedef struct s_fdf
 {
 	int		height;
 	int		width;
-	int		**map;
+	t_point	**map;
 	int		zoom;
-	int		zoom_z;
 	int		color;
-	int		color_non;
+	int		zoom_z;
 	int		shift_x;
 	int		shift_y;
 	int		iso;
+	t_col	scheme;
 
 	void	*mlx_ptr;
 	void	*win_ptr;
@@ -42,6 +70,7 @@ int		ft_read_map(t_fdf *fdf, char *file);
 int		get_width(char *line);
 void	bresenham(t_fdf *fdf, float x, float y, float x1, float y1);
 void	draw(t_fdf *fdf);
+void	print_menu(t_fdf *fdf);
 
 
 #endif

@@ -12,38 +12,36 @@
 
 #include "libft.h"
 
-static	void	sign(char **s, int *z)
+int	ft_isspace(int c)
 {
-	if (*(*s) == '-' || *(*s) == '+')
-	{
-		if (*(*s) == '-')
-			*z = -1;
-		(*s)++;
-	}
+	return (c == '\n' || c == '\t' || c == '\v'
+			|| c == '\r' || c == '\f' || c == ' ');
 }
 
-int				ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
-	unsigned long long	nb;
-	int					z;
-	char				*s;
+	unsigned long long	result;
+	int					negative;
+	int					i;
 
-	s = (char *)malloc(sizeof(char *) * ft_strlen(str) + 1);
-	if (s == NULL)
-		return (0);
-	nb = 0;
-	s = (char *)str;
-	z = 1;
-	while (*s == ' ' || *s == '\t' || *s == '\n' ||
-			*s == '\v' || *s == '\f' || *s == '\r')
-		s++;
-	sign(&s, &z);
-	while (*s >= '0' && *s <= '9')
+	i = 0;
+	negative = 1;
+	result = 0;
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '+')
+		str++;
+	else if (*str == '-')
 	{
-		nb = nb * 10 + (*s - '0');
-		s++;
+		negative = -1;
+		str++;
 	}
-	if (nb >= 9223372036854775807)
-		return (z == -1 ? 0 : -1);
-	return (nb * z);
+	while (*str != '\0' && ft_isdigit(*str))
+	{
+		result = (result * 10) + (*str - 48);
+		str++;
+	}
+	if (i > 19 || result >= 9223372036854775807)
+		return (negative == 1 ? -1 : 0);
+	return (result * negative);
 }

@@ -12,28 +12,22 @@
 
 #include "libft.h"
 
-char	*ft_strstr(const char *hayst, const char *need)
+char	*ft_strstr(const char *str, const char *substr)
 {
-	char		*str;
-	unsigned	i;
-	unsigned	j;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
-	j = 0;
-	str = (char *)malloc(sizeof(char *) * ft_strlen(hayst));
-	if (str == NULL)
-		return (str);
-	str = (char *)hayst;
+	if (str[0] == '\0' && substr[0] == '\0')
+		return ((char *)str);
 	while (str[i] != '\0')
 	{
 		j = 0;
-		while (str[i + j] == need[j] && need[j] != '\0')
+		while (substr[j] != '\0' && str[i + j] == substr[j])
 			j++;
-		if (need[j] == '\0' && j != 0)
-			return (&str[i]);
+		if (substr[j] == '\0')
+			return ((char *)str + i);
 		i++;
 	}
-	if (need[0] == '\0')
-		return (&str[0]);
 	return (NULL);
 }
