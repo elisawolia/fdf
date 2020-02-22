@@ -70,7 +70,6 @@ void	ft_fill(t_fdf *fdf, char *line, int i)
 	while (nums[j])
 	{
 		fdf->map[i][j] = ft_atoi(nums[j]);
-		//ft_putnbr(ft_atoi(nums[j]));
 		free(nums[j]);
 		j++;
 	}
@@ -105,7 +104,6 @@ int	ft_fill_map(t_fdf *fdf, char *file)
 	}
 	fdf->map[i] = NULL;
 	close(fd);
-	print_map(fdf);
 	return (1);
 }
 

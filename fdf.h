@@ -19,17 +19,23 @@
 #include "LIB/libft.h"
 #include "get_next_line/get_next_line.h"
 
+
 typedef struct s_fdf
 {
 	int		height;
 	int		width;
 	int		**map;
 	int		zoom;
+	int		zoom_z;
 	int		color;
-
+	int		color_non;
+	int		shift_x;
+	int		shift_y;
+	int		iso;
 
 	void	*mlx_ptr;
 	void	*win_ptr;
+	void	*img_ptr;
 }			t_fdf;
 
 int		ft_read_map(t_fdf *fdf, char *file);
