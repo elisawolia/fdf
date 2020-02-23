@@ -16,8 +16,8 @@
 #include <mlx.h>
 #include <fcntl.h>
 #include <math.h>
-#include "LIB/libft.h"
-#include "get_next_line/get_next_line.h"
+#include "../libft/libft.h"
+#include "get_next_line.h"
 
 #define LOW_1 0xffc300
 #define	FINE_1	0xff5733
@@ -46,6 +46,7 @@ typedef	struct s_point
 {
 	int		data;
 	int		color;
+	int		col_def;
 }			t_point;
 
 typedef struct s_fdf
@@ -60,17 +61,28 @@ typedef struct s_fdf
 	int		shift_y;
 	int		iso;
 	t_col	scheme;
+	int		lines;
 
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*img_ptr;
 }			t_fdf;
 
+int	ft_fill(t_fdf *fdf, char *line, int i);
+void	set_params(t_fdf *fdf);
+int	ft_fill_map(t_fdf *fdf, char *file);
 int		ft_read_map(t_fdf *fdf, char *file);
 int		get_width(char *line);
 void	bresenham(t_fdf *fdf, float x, float y, float x1, float y1);
 void	draw(t_fdf *fdf);
 void	print_menu(t_fdf *fdf);
+int 	check_key(int key);
+void	do_key(int key, t_fdf *fdf);
+void 	clean_fdf(t_fdf **fdf);
+int 	deal_key(int key, t_fdf *fdf);
+void	set_params(t_fdf *fdf);
+int 	main(int argc, char **argv);
+
 
 
 #endif

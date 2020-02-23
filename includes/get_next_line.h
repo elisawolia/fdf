@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmap.c                                        :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlintill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/17 16:05:20 by rlintill          #+#    #+#             */
-/*   Updated: 2019/10/12 15:14:41 by rlintill         ###   ########.fr       */
+/*   Created: 2019/10/12 15:37:13 by rlintill          #+#    #+#             */
+/*   Updated: 2019/10/12 15:49:55 by rlintill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+# define BUFF_SIZE 42
 
-t_list	*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
-{
-	t_list	*list;
+# include <stdlib.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include "../libft/libft.h"
 
-	if (lst == NULL || f == NULL)
-		return (NULL);
-	list = (t_list*)malloc(sizeof(lst));
-	if (list == NULL)
-		return (NULL);
-	list = (f)(lst);
-	if (lst->next)
-		list->next = ft_lstmap(lst->next, f);
-	else
-		list->next = NULL;
-	return (list);
-}
+int		get_next_line(const int fd, char **line);
+
+#endif

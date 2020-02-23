@@ -12,10 +12,7 @@
 
 #include "fdf.h"
 
-float mod(float a)
-{
-	return ((a >= 0) ? a: -a);
-}
+#define MOD(a) ((a >= 0) ? a: -a)
 
 void isometric(float *x, float *y, float z)
 {
@@ -109,7 +106,7 @@ void bresenham(t_fdf *fdf, float x, float y, float x1, float y1)
 	x_step = x1 - x;
 	y_step = y1 - y;
 	
-	max = (mod(x_step) > mod(y_step)) ? mod(x_step) : mod(y_step);
+	max = (MOD(x_step) > MOD(y_step)) ? MOD(x_step) : MOD(y_step);
 
 	x_step /= max;
 	y_step /= max;

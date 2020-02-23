@@ -31,44 +31,44 @@ void	print_menu(t_fdf *fdf)
 	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 70, 0xffffff, menu);
 	menu = "To change color scheme: 1/2/3";
 	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 90, 0xffffff, menu);
-	menu = "To quit: ESC";
+	menu = "Dots/lines mode: l/k";
 	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 110, 0xffffff, menu);
+	menu = "To quit: ESC";
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 130, 0xffffff, menu);
 }
 
-int		hex_to_dec(char **hex)
+int		hex_to_dec(char *hex)
 {
 	int		len;
 	int		res;
 	int		i;
 	char	temp;
 
-	len = ft_strlen(*hex);
+	len = ft_strlen(hex);
 	res = 0;
 	i = 0;
+	
 	while (i < len)
 	{
-		temp = *hex[i];
-		if (ft_isdigit(*hex[i]))
+		temp = hex[i];
+		if (ft_isdigit(hex[i]))
 			temp -= '0';
 		else if ((temp >= 'A' && temp <= 'F') || (temp >= 'a' && temp <= 'f'))
 			temp = ft_toupper(temp) - 'A' + 10;
 		res += temp * ft_pow(16, ((len - i) - 1));
 		i++;
 	}
-	if (*hex)
-		free(*hex);
 	return (res);
 }
 
-int		read_color(char *nums, int data, t_fdf *fdf)
+int		read_color(char *nums, int data, t_fdf *fdf, int *col_def)
 {
 	char *hex;
-	char *temp;
 
 	hex = ft_strstr(nums, ",0x");
-	temp = hex;
 	if (!hex)
 	{
+		*col_def = 0;
 		free(hex);
 		if (data <= -5)
 			return (fdf->scheme.low);
@@ -79,9 +79,8 @@ int		read_color(char *nums, int data, t_fdf *fdf)
 		if (data > 5)
 			return (fdf->scheme.high);
 	}
-	if (hex)
-		free(hex);
-	return (hex_to_dec(&temp + 3));
+	*col_def = 1;
+	return (hex_to_dec(hex + 3));
 }
 
 void		ft_clear(char **buf, int w)
@@ -123,14 +122,14 @@ int		get_width(char *line)
 	return (i);
 }
 
-void	ft_fill(t_fdf *fdf, char *line, int i)
+int	ft_fill(t_fdf *fdf, char *line, int i)
 {
 	char **nums;
 	int j;
 
 	j = 0;
 	if (!(nums = ft_strsplit(line, ' ')))
-		return ;
+		return (-1);
 	while (nums[j])
 	{
 		if ((nums[j][0] >= '0' && nums[j][0] <= '9') || nums[j][0] == '-' || nums[j][0] == '+')
@@ -138,13 +137,14 @@ void	ft_fill(t_fdf *fdf, char *line, int i)
 		else
 		{
 			ft_clear(nums, j);
-			return ; // error
+			return (-1);
 		}
-		fdf->map[i][j].color = read_color(nums[j], fdf->map[i][j].data, fdf);
-		free(nums[j]);
+		fdf->map[i][j].color = read_color(nums[j], fdf->map[i][j].data, fdf, &(fdf->map[i][j].col_def));
+		free(nums[j]);	
 		j++;
 	}
 	free (nums);
+	return (0);
 }
 
 int	ft_fill_map(t_fdf *fdf, char *file)
@@ -169,7 +169,13 @@ int	ft_fill_map(t_fdf *fdf, char *file)
 	i = 0;
 	while (get_next_line(fd, &line) == 1)
 	{
-		ft_fill(fdf, line, i);
+		if (ft_fill(fdf, line, i) == -1)
+		{
+			free(line);
+			clean_fdf(&fdf);
+			close(fd);
+			return (-1);
+		}
 		free(line);
 		i++;
 	}
