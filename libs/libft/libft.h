@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rlintill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ahandsom <ahandsom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/07 11:16:14 by rlintill          #+#    #+#             */
-/*   Updated: 2019/09/19 15:08:56 by rlintill         ###   ########.fr       */
+/*   Updated: 2020/02/23 13:44:47 by ahandsom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 
 # define USLOVIE1 (s[i] == c && s[i + 1] != c && s[i + 1] != '\0')
 # define USLOVIE2 (i == 0 && s[i] != c && s[i + 1] != '\0')
+# define BUFF_SIZE 42
 
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <fcntl.h>
 
 void				*ft_memset(void *b, int s, size_t len);
 void				ft_bzero(void *s, size_t n);
@@ -93,4 +95,7 @@ int					ft_cwords(char *s, char c);
 char				*ft_putw(const char *s, char *dst, char c, int i);
 int					ft_l(char *s, char c, int j);
 int					ft_itsymb(int n);
+
+int					get_next_line(const int fd, char **line);
+
 #endif

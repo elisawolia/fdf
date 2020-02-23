@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rlintill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ahandsom <ahandsom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/21 11:39:16 by rlintill          #+#    #+#             */
-/*   Updated: 2019/10/12 15:35:23 by rlintill         ###   ########.fr       */
+/*   Updated: 2020/02/23 13:42:47 by ahandsom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
 int		check_list(t_list *lst, int fd, t_list **nw)
 {

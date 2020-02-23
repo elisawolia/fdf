@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rlintill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ahandsom <ahandsom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/23 12:49:05 by rlintill          #+#    #+#             */
-/*   Updated: 2020/02/23 12:49:08 by rlintill         ###   ########.fr       */
+/*   Updated: 2020/02/23 17:15:12 by ahandsom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		hex_to_dec(char *hex)
 	return (res);
 }
 
-void		ft_clear(char **buf, int w)
+void	ft_clear(char **buf, int w)
 {
 	while (w >= 0)
 	{

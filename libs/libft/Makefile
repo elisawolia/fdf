@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rlintill <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: ahandsom <ahandsom@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/07 18:15:53 by rlintill          #+#    #+#              #
-#    Updated: 2020/02/04 11:04:06 by rlintill         ###   ########.fr        #
+#    Updated: 2020/02/23 13:42:59 by ahandsom         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,8 @@ SRC_DOP = ft_swap.c\
 		  ft_cwords.c\
 		  ft_putw.c\
 		  ft_l.c\
-		  ft_itsymb.c
+		  ft_itsymb.c\
+		  get_next_line.c
 
 $(NAME):
 	@gcc $(FLAG) ./$(SRC_P1) ./$(SRC_P2) ./$(SRC_PB) ./$(SRC_DOP) -c -I ./$(HEADER)

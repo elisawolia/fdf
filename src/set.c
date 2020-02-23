@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rlintill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ahandsom <ahandsom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/23 12:50:09 by rlintill          #+#    #+#             */
-/*   Updated: 2020/02/23 12:50:10 by rlintill         ###   ########.fr       */
+/*   Updated: 2020/02/23 18:08:22 by ahandsom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,26 @@ void	color(t_fdf *fdf, t_dot point)
 		else if (fdf->map[(int)(point.y)][(int)(point.x)].data > 5)
 			fdf->color = fdf->scheme.high;
 	}
+}
+
+int		read_color(char *nums, int data, t_fdf *fdf, int *col_def)
+{
+	char *hex;
+
+	hex = ft_strstr(nums, ",0x");
+	if (!hex)
+	{
+		*col_def = 0;
+		free(hex);
+		if (data <= -5)
+			return (fdf->scheme.low);
+		if (data <= 0)
+			return (fdf->scheme.fine);
+		if (data <= 5)
+			return (fdf->scheme.norm);
+		if (data > 5)
+			return (fdf->scheme.high);
+	}
+	*col_def = 1;
+	return (hex_to_dec(hex + 3));
 }

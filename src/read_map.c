@@ -3,58 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   read_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rlintill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ahandsom <ahandsom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 10:32:32 by rlintill          #+#    #+#             */
-/*   Updated: 2020/02/21 10:32:34 by rlintill         ###   ########.fr       */
+/*   Updated: 2020/02/23 18:10:32 by ahandsom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	print_menu(t_fdf *fdf)
-{
-	char *menu;
-
-	menu = "To move picture: up, down, left, right";
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 10, 0xffffff, menu);
-	menu = "To zoom in/out: +/-";
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 30, 0xffffff, menu);
-	menu = "To change height: z/x";
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 50, 0xffffff, menu);
-	menu = "3D mode on/off: q/w";
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 70, 0xffffff, menu);
-	menu = "To change color scheme: 1/2/3";
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 90, 0xffffff, menu);
-	menu = "Dots/lines mode: l/k";
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 110, 0xffffff, menu);
-	menu = "To quit: ESC";
-	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 130, 0xffffff, menu);
-}
-
-int		read_color(char *nums, int data, t_fdf *fdf, int *col_def)
-{
-	char *hex;
-
-	hex = ft_strstr(nums, ",0x");
-	if (!hex)
-	{
-		*col_def = 0;
-		free(hex);
-		if (data <= -5)
-			return (fdf->scheme.low);
-		if (data <= 0)
-			return (fdf->scheme.fine);
-		if (data <= 5)
-			return (fdf->scheme.norm);
-		if (data > 5)
-			return (fdf->scheme.high);
-	}
-	*col_def = 1;
-	return (hex_to_dec(hex + 3));
-}
-
-int		get_width(char *line)
+int	get_width(char *line)
 {
 	char	**nums;
 	int		i;
@@ -128,7 +86,7 @@ int	map(t_fdf *fdf, char *file)
 		if (!(fdf->map[i] =
 			(t_point*)malloc(sizeof(t_point) * (fdf->width + 1))))
 		{
-			close (fd);
+			close(fd);
 			clean_fdf(&fdf);
 			return (0);
 		}
@@ -175,7 +133,7 @@ int	ft_read_map(t_fdf *fdf, char *file)
 	while (get_next_line(fd, &line) == 1)
 	{
 		fdf->height++;
-		if (!(width = get_width(line)))
+		if (!(width = get_width(line)) && (fdf->width != width))
 		{
 			ft_putstr("Im out\n");
 			free(line);
@@ -183,12 +141,6 @@ int	ft_read_map(t_fdf *fdf, char *file)
 		}
 		if (fdf->width == 0)
 			fdf->width = width;
-		else if (fdf->width != width)
-		{
-			ft_putstr("Im out\n");
-			free(line);
-			return (-1);
-		}
 		free(line);
 	}
 	close(fd);
