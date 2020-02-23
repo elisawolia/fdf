@@ -12,11 +12,6 @@
 
 #include "fdf.h"
 
-double	ft_pow(double n, int pow)
-{
-	return (pow ? n * ft_pow(n, pow - 1) : 1);
-}
-
 void	print_menu(t_fdf *fdf)
 {
 	char *menu;
@@ -35,30 +30,6 @@ void	print_menu(t_fdf *fdf)
 	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 110, 0xffffff, menu);
 	menu = "To quit: ESC";
 	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 20, 130, 0xffffff, menu);
-}
-
-int		hex_to_dec(char *hex)
-{
-	int		len;
-	int		res;
-	int		i;
-	char	temp;
-
-	len = ft_strlen(hex);
-	res = 0;
-	i = 0;
-	
-	while (i < len)
-	{
-		temp = hex[i];
-		if (ft_isdigit(hex[i]))
-			temp -= '0';
-		else if ((temp >= 'A' && temp <= 'F') || (temp >= 'a' && temp <= 'f'))
-			temp = ft_toupper(temp) - 'A' + 10;
-		res += temp * ft_pow(16, ((len - i) - 1));
-		i++;
-	}
-	return (res);
 }
 
 int		read_color(char *nums, int data, t_fdf *fdf, int *col_def)
@@ -83,21 +54,11 @@ int		read_color(char *nums, int data, t_fdf *fdf, int *col_def)
 	return (hex_to_dec(hex + 3));
 }
 
-void		ft_clear(char **buf, int w)
-{
-	while (w >= 0)
-	{
-		ft_strdel(&buf[w]);
-		w--;
-	}
-	free(*buf);
-}
-
 int		get_width(char *line)
 {
-	char **nums;
-	int	i;
-	int	j;
+	char	**nums;
+	int		i;
+	int		j;
 
 	j = 0;
 	i = 0;
@@ -105,15 +66,15 @@ int		get_width(char *line)
 	while (nums[i])
 	{
 		j = 0;
-		while (nums[i][j])
+		while (nums[i][j++])
 		{
-			if (!ft_isdigit(nums[i][0]) && nums[i][0] != '-' && nums[i][0] != '+')
+			if (!ft_isdigit(nums[i][0]) &&
+				nums[i][0] != '-' && nums[i][0] != '+')
 			{
 				ft_clear(nums, i);
 				free(nums);
 				return (-1);
 			}
-			j++;
 		}
 		i++;
 	}
@@ -124,49 +85,69 @@ int		get_width(char *line)
 
 int	ft_fill(t_fdf *fdf, char *line, int i)
 {
-	char **nums;
-	int j;
+	char	**nums;
+	int		j;
 
 	j = 0;
 	if (!(nums = ft_strsplit(line, ' ')))
 		return (-1);
 	while (nums[j])
 	{
-		if ((nums[j][0] >= '0' && nums[j][0] <= '9') || nums[j][0] == '-' || nums[j][0] == '+')
+		if ((nums[j][0] >= '0' && nums[j][0] <= '9')
+			|| nums[j][0] == '-' || nums[j][0] == '+')
 			fdf->map[i][j].data = ft_atoi(nums[j]);
 		else
 		{
 			ft_clear(nums, j);
 			return (-1);
 		}
-		fdf->map[i][j].color = read_color(nums[j], fdf->map[i][j].data, fdf, &(fdf->map[i][j].col_def));
-		free(nums[j]);	
+		fdf->map[i][j].color = read_color(nums[j], fdf->map[i][j].data,
+			fdf, &(fdf->map[i][j].col_def));
+		free(nums[j]);
 		j++;
 	}
-	free (nums);
+	free(nums);
 	return (0);
+}
+
+int	map(t_fdf *fdf, char *file)
+{
+	int	fd;
+	int	i;
+
+	i = 0;
+	if (!(fd = open(file, O_RDONLY)))
+		return (0);
+	if (!(fdf->map = (t_point**)malloc(sizeof(t_point*) * (fdf->height + 1))))
+	{
+		close(fd);
+		return (0);
+	}
+	while (i < fdf->height)
+	{
+		if (!(fdf->map[i] =
+			(t_point*)malloc(sizeof(t_point) * (fdf->width + 1))))
+		{
+			close (fd);
+			clean_fdf(&fdf);
+			return (0);
+		}
+		i++;
+	}
+	return (fd);
 }
 
 int	ft_fill_map(t_fdf *fdf, char *file)
 {
-	int	fd;
-	char *line;
-	int i;
-	int	j;
+	int		fd;
+	char	*line;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
-	if (!(fd = open(file, O_RDONLY)))
+	if (!(fd = map(fdf, file)))
 		return (-1);
-	if (!(fdf->map = (t_point**)malloc(sizeof(t_point*) * (fdf->height + 1))))
-		return (-1);
-	while (i < fdf->height)
-	{
-		if (!(fdf->map[i] = (t_point*)malloc(sizeof(t_point) * (fdf->width + 1))))
-			return (-1);
-		i++;
-	}
-	i = 0;
 	while (get_next_line(fd, &line) == 1)
 	{
 		if (ft_fill(fdf, line, i) == -1)
@@ -196,7 +177,7 @@ int	ft_read_map(t_fdf *fdf, char *file)
 		fdf->height++;
 		if (!(width = get_width(line)))
 		{
-			ft_putstr("Im out\n"); //error
+			ft_putstr("Im out\n");
 			free(line);
 			return (-1);
 		}
@@ -204,7 +185,7 @@ int	ft_read_map(t_fdf *fdf, char *file)
 			fdf->width = width;
 		else if (fdf->width != width)
 		{
-			ft_putstr("Im out\n"); //error
+			ft_putstr("Im out\n");
 			free(line);
 			return (-1);
 		}

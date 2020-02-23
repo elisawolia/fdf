@@ -12,144 +12,67 @@
 
 #include "fdf.h"
 
-float mod(float a)
-{
-	return ((a >= 0) ? a: -a);
-}
-
-void isometric(float *x, float *y, float z)
-{
-	*x = (*x - *y) * cos(0.523599);
-	*y = (*x + *y) * sin(0.523599) - z;
-}
-
-void bresenham_dot(t_fdf *fdf, float x, float y)
+void	bresenham_dot(t_fdf *fdf, t_dot point)
 {
 	float z;
 
-	z = fdf->map[(int)y][(int)x].data;
-
-	if (fdf->map[(int)y][(int)x].col_def == 1)
-	{
-		fdf->color = fdf->map[(int)y][(int)x].color;
-	}
-	else
-	{
-		if (fdf->map[(int)y][(int)x].data <= -5)
-			fdf->color = fdf->scheme.low;
-		else if (fdf->map[(int)y][(int)x].data <= 0)
-			fdf->color = fdf->scheme.fine;
-		else if (fdf->map[(int)y][(int)x].data <= 5)
-			fdf->color = fdf->scheme.norm;
-		else if (fdf->map[(int)y][(int)x].data > 5)
-			fdf->color = fdf->scheme.high;
-	}
-	
-
-	x *= fdf->zoom;
-	y *= fdf->zoom;
-	z *= fdf->zoom_z;
-
-	if (fdf->iso)
-		isometric(&x, &y, z);
-
-	x += fdf->shift_x;
-	y += fdf->shift_y;
-	
-	mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, x, y, fdf->color);
+	z = fdf->map[(int)(point.y)][(int)(point.x)].data;
+	color(fdf, point);
+	set_points(&point, &z, fdf);
+	mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, point.x, point.y, fdf->color);
 }
 
-void bresenham(t_fdf *fdf, float x, float y, float x1, float y1)
+void	bresenham(t_fdf *fdf, t_dot start, t_dot end)
 {
-	float x_step;
-	float y_step;
-	int max;
-	float z;
-	float z1;
+	float	x_step;
+	float	y_step;
+	int		max;
+	float	z;
+	float	z1;
 
-	z = fdf->map[(int)y][(int)x].data;
-	z1 = fdf->map[(int)y1][(int)x1].data;
-	
-	if (fdf->map[(int)y][(int)x].col_def == 1)
-	{
-		fdf->color = fdf->map[(int)y][(int)x].color;
-	}
-	else
-	{
-		if (fdf->map[(int)y][(int)x].data <= -5)
-			fdf->color = fdf->scheme.low;
-		else if (fdf->map[(int)y][(int)x].data <= 0)
-			fdf->color = fdf->scheme.fine;
-		else if (fdf->map[(int)y][(int)x].data <= 5)
-			fdf->color = fdf->scheme.norm;
-		else if (fdf->map[(int)y][(int)x].data > 5)
-			fdf->color = fdf->scheme.high;
-	}
-	
-
-	x *= fdf->zoom;
-	y *= fdf->zoom;
-	x1 *= fdf->zoom;
-	y1 *= fdf->zoom;
-	z *= fdf->zoom_z;
-	z1 *= fdf->zoom_z;
-
-
-	if (fdf->iso)
-	{
-		isometric(&x, &y, z);
-		isometric(&x1, &y1, z1);
-	}
-
-	x += fdf->shift_x;
-	y += fdf->shift_y;
-	x1 += fdf->shift_x;
-	y1 += fdf->shift_y;
-
-	x_step = x1 - x;
-	y_step = y1 - y;
-	
+	z = fdf->map[(int)(start.y)][(int)(start.x)].data;
+	z1 = fdf->map[(int)(end.y)][(int)(end.x)].data;
+	color(fdf, start);
+	set_points(&start, &z, fdf);
+	set_points(&end, &z1, fdf);
+	x_step = end.x - start.x;
+	y_step = end.y - start.y;
 	max = (mod(x_step) > mod(y_step)) ? mod(x_step) : mod(y_step);
-
 	x_step /= max;
 	y_step /= max;
-
-	while ((int)(x - x1)||(int)(y - y1))
+	while ((int)(start.x - end.x) || (int)(start.y - end.y))
 	{
-		mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, x, y, fdf->color);
-		x += x_step;
-		y += y_step;
-		if (x > 1000 || y > 1000 || y < 0 || x < 0)
+		mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, start.x, start.y, fdf->color);
+		start.x += x_step;
+		start.y += y_step;
+		if (start.x > 1000 || start.y > 1000 || start.y < 0 || start.x < 0)
 			break ;
 	}
 }
 
-
 void	draw(t_fdf *fdf)
 {
-	int i;
-	int j;
+	int y;
+	int x;
 
-	i = 0;
-	while (i < fdf->height)
+	y = 0;
+	x = 0;
+	while (y < fdf->height)
 	{
-		j = 0;
-		while (j < fdf->width)
+		x = 0;
+		while (x < fdf->width)
 		{
 			if (fdf->lines)
 			{
-				if (j < fdf->width - 1)
-					bresenham(fdf, j, i, (j + 1), i);
-				if (i < fdf->height - 1)
-					bresenham(fdf, j, i, j, (i + 1));
+				if (x < fdf->width - 1)
+					bresenham(fdf, new_dot(x, y), new_dot((x + 1), y));
+				if (y < fdf->height - 1)
+					bresenham(fdf, new_dot(x, y), new_dot(x, (y + 1)));
 			}
-			else
-			{
-				if (j < fdf->width)
-					bresenham_dot(fdf, j, i);
-			}
-			j++;
+			else if (x < fdf->width)
+				bresenham_dot(fdf, new_dot(x, y));
+			x++;
 		}
-		i++;
+		y++;
 	}
 }

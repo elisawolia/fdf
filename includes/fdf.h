@@ -40,7 +40,13 @@ typedef struct s_col
 	int		fine;
 	int		norm;
 	int		high;
-}	t_col;
+}			t_col;
+
+typedef	struct s_dot
+{
+	float	x;
+	float	y;
+}			t_dot;
 
 typedef	struct s_point
 {
@@ -73,7 +79,8 @@ void	set_params(t_fdf *fdf);
 int	ft_fill_map(t_fdf *fdf, char *file);
 int		ft_read_map(t_fdf *fdf, char *file);
 int		get_width(char *line);
-void	bresenham(t_fdf *fdf, float x, float y, float x1, float y1);
+void	bresenham(t_fdf *fdf, t_dot start, t_dot end);
+//void	bresenham(t_fdf *fdf, float x, float y, float x1, float y1);
 void	draw(t_fdf *fdf);
 void	print_menu(t_fdf *fdf);
 int 	check_key(int key);
@@ -82,6 +89,15 @@ void 	clean_fdf(t_fdf **fdf);
 int 	deal_key(int key, t_fdf *fdf);
 void	set_params(t_fdf *fdf);
 int 	main(int argc, char **argv);
+
+void	isometric(t_dot *point, float z);
+void	set_points(t_dot *point, float *z, t_fdf *fdf);
+void	color(t_fdf *fdf, t_dot point);
+float	mod(float a);
+t_dot	new_dot(int x, int y);
+double	ft_pow(double n, int pow);
+int		hex_to_dec(char *hex);
+void		ft_clear(char **buf, int w);
 
 
 
