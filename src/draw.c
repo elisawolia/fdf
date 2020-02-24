@@ -12,6 +12,13 @@
 
 #include "fdf.h"
 
+int		error_read(char **line)
+{
+	write(2, "Not valid file!\n", 16);
+	free(*line);
+	return (-1);
+}
+
 void	bresenham_dot(t_fdf *fdf, t_dot point)
 {
 	float z;

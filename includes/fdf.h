@@ -6,7 +6,7 @@
 /*   By: ahandsom <ahandsom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/21 10:19:31 by rlintill          #+#    #+#             */
-/*   Updated: 2020/02/23 18:34:45 by ahandsom         ###   ########.fr       */
+/*   Updated: 2020/02/24 10:17:57 by rlintill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ typedef struct	s_fdf
 	void	*img_ptr;
 }				t_fdf;
 
+int				error_read(char **line);
+int				error(t_fdf **fdf);
 int				ft_fill(t_fdf *fdf, char *line, int i);
 void			set_params(t_fdf *fdf);
 int				ft_fill_map(t_fdf *fdf, char *file);

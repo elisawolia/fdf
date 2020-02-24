@@ -6,7 +6,7 @@
 /*   By: ahandsom <ahandsom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 14:09:48 by rlintill          #+#    #+#             */
-/*   Updated: 2020/02/23 18:13:42 by ahandsom         ###   ########.fr       */
+/*   Updated: 2020/02/24 10:17:34 by rlintill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ void	clean_fdf(t_fdf **fdf)
 	free(*fdf);
 }
 
+int		error(t_fdf **fdf)
+{
+	free(*fdf);
+	write(2, "Error!\n", 7);
+	return (0);
+}
+
 int		main(int argc, char **argv)
 {
 	t_fdf	*fdf;
@@ -71,13 +78,11 @@ int		main(int argc, char **argv)
 	i = 1;
 	fdf = (t_fdf*)malloc(sizeof(t_fdf));
 	set_params(fdf);
+	if (argc != 2)
+		return (error(&fdf));
 	if (argc == 2)
 		if (ft_read_map(fdf, argv[1]) < 0)
-		{
-			free(fdf);
-			ft_putstr("error!\n");
-			return (0);
-		}
+			return (error(&fdf));
 	fdf->mlx_ptr = mlx_init();
 	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, 1000, 1000, "FDF");
 	print_menu(fdf);

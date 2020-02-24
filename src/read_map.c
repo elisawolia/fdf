@@ -133,14 +133,12 @@ int	ft_read_map(t_fdf *fdf, char *file)
 	while (get_next_line(fd, &line) == 1)
 	{
 		fdf->height++;
-		if (!(width = get_width(line)) && (fdf->width != width))
-		{
-			ft_putstr("Im out\n");
-			free(line);
-			return (-1);
-		}
+		if (!(width = get_width(line)))
+			return (error_read(&line));
 		if (fdf->width == 0)
 			fdf->width = width;
+		else if (fdf->width != width)
+			return (error_read(&line));
 		free(line);
 	}
 	close(fd);
